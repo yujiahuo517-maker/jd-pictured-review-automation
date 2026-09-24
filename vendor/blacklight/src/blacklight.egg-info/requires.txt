@@ -1,0 +1,13 @@
+mcp>=1.0
+httpx>=0.24
+openpyxl>=3.1
+xlrd>=2.0.1
+
+[freshness]
+psutil>=5.9
+
+[login]
+DrissionPage>=4.0
+
+[material]
+Pillow>=10.0

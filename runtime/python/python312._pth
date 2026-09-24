@@ -1,0 +1,6 @@
+python312.zip
+.
+..\python-libs
+..\..\vendor\blacklight\src
+
+import site

@@ -1,0 +1,2 @@
+[console_scripts]
+blacklight = blacklight.cli:main

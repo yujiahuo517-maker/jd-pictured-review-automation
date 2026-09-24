@@ -1,0 +1,7 @@
+interface:
+  display_name: "京喜带图评价稳定自动化"
+  short_description: "API 优先处理带图评价，支持质检、续跑与生效回读"
+  default_prompt: "Use $jd-pictured-review-automation to safely process today's pictured-review tasks and verify final activation."
+
+policy:
+  allow_implicit_invocation: true

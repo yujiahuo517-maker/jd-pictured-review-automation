@@ -1,0 +1,275 @@
+{
+    "gateways":  {
+                     "campaign":  "https://mcpman.jd.com",
+                     "subsidy":  "https://mac.jd.com",
+                     "markettool":  "https://api.m.jd.com",
+                     "bybt":  "https://bid-activity.jd.com",
+                     "ms":  "https://oac.jd.com",
+                     "product":  "https://sff.jd.com",
+                     "jzt":  "https://cxjzt-api.jd.com",
+                     "ge":  "http://ge.back.jd.com"
+                 },
+    "jzt":  {
+                "_note":  "京准通(cxjzt.jd.com)。登录=拿 yx/ERP 登录态 POST admin-atoms-api 的 skippwd 种 skpp_p/skpp_s(见 jzt/auth.py),不需要浏览器。default_pin 是免密登录到哪个广告账号,可用 jzt_accounts 枚举、jzt_set_account 切换。",
+                "default_pin":  ""
+            },
+    "campaign":  {
+                     "resource_type":  1000002
+                 },
+    "product":  {
+                    "_note":  "商品列表(wares-jdm.jd.com/ware/wareList 背后 gateway)。h5st/设备指纹非强制,仅 cookie 鉴权(2026-07-17 实证)。belong-biz-id 头=店铺范围(必带)。pageSize≤100。biz_id 多店铺可 env YX_PRODUCT_BIZ_ID 或入参覆盖。",
+                    "biz_id":  "14691198",
+                    "app_id":  "3MC69M4R3HFKCQ4S01DN",
+                    "api":  "dsm.product.manage.ProductInfoReadViewService.queryValidProductList"
+                },
+    "bybt":  {
+                 "default_area_id":  319901,
+                 "_forms_note":  "竞价报名「开放化动态表单」formItemOrder + 角色映射，**每活动不同**（key=activityId）。来自真实报名 capture。resourceId 同活动配套。",
+                 "forms":  {
+                               "101664799":  {
+                                                 "resourceId":  "2935",
+                                                 "areaId":  319901,
+                                                 "roles":  {
+                                                               "skuId":  179117725,
+                                                               "bidPrice":  179117729,
+                                                               "bidNum":  179117730,
+                                                               "const1":  1711367072
+                                                           },
+                                                 "formItemOrder":  [
+                                                                       179117725,
+                                                                       179117729,
+                                                                       179117730,
+                                                                       179117731,
+                                                                       179117732,
+                                                                       1710658141,
+                                                                       1710658142,
+                                                                       1710718542,
+                                                                       1710718543,
+                                                                       1710718544,
+                                                                       1710718545,
+                                                                       1710909633,
+                                                                       1710909634,
+                                                                       1710909635,
+                                                                       1710909636,
+                                                                       1711081771,
+                                                                       1711081772,
+                                                                       1711367072
+                                                                   ]
+                                             }
+                           },
+                 "default_activity_id":  "101664799",
+                 "_activity_note":  "超级补贴(百亿)报名/退出活动;forms 也以此为key。get_rule_id(319901,101664799)→87yoF4oB97mt0bp_tXKW。"
+             },
+    "ms":  {
+               "default_apply_sku_type":  "3",
+               "_table_note":  "秒杀表格报名：下官方空模板→填6列(SKUID/促销价/促销数量/限购数量/限购方式/是否主推)→上传 /apply/openness/apply/excel(multipart)。formItemId**每活动/批次可能变但code稳定**(用户纠正)→代码用 fetch_form_set() 调 `POST /openness/formset/area/detail?areaId=` 按 code 动态取(activityBeginHour=场次开始时间/activityDuration=促销时长)。**实证:formset只按areaId取、与报名模式(京东自营/京喜自营)无关**(2026-07-13,两模式areaId都313601,映射一字不差)。table_form 仅作兜底。场次expectedTime固定20:00:00。sessions=8场次整点。",
+               "table_template_url":  "https://storage.360buyimg.com/global/seckill/xiangou/秒杀报名模板POP-限购方式.xlsx",
+               "table_form":  {
+                                  "sessionTime":  179075941,
+                                  "duration":  179075942,
+                                  "_note":  "仅兜底;正常走formset动态取(code:activityBeginHour/activityDuration)"
+                              },
+               "table_form_codes":  {
+                                        "sessionTime":  "activityBeginHour",
+                                        "duration":  "activityDuration"
+                                    },
+               "default_expected_time":  "20:00:00",
+               "sessions":  [
+                                "00:00:00",
+                                "08:00:00",
+                                "10:00:00",
+                                "12:00:00",
+                                "16:00:00",
+                                "18:00:00",
+                                "20:00:00",
+                                "22:00:00"
+                            ],
+               "default_promo_qty":  5000,
+               "_promo_qty_note":  "秒杀促销数量固定5000(下限100);别按实际库存(库存\u003c100会被拒)。_norm_rows 缺则默认取此。",
+               "seckill_activity_id":  "101666814",
+               "seckill_area_id":  313601,
+               "seckill_rule_id":  "87yoF4oB97mt0bp_tXKW"
+           },
+    "baoyou":  {
+                   "_note":  "便宜包邮/特价 = oac.jd.com openness（与 ms 同套端点）；查/退用 yx_ms_* 传下列 activityId/areaId(京喜自营 applySkuType=3)。前置池审核通过后才能报后续(平台补贴券)池。报名缓建(packageType:2=全国非偏远)。",
+                   "_selection_note":  "list_eligible/price_eligible/apply 用 ruleId+batchId+areaId。batchId 由 getBatchId(areaId, beginTime=\u0027YYYY-MM-DD 00:00:00\u0027) 取(前置池 T+0 即可，如便宜包邮前置今天=6615177、特价前置今天=6615595)。saveApply formItemId 便宜包邮/特价共用 BAOYOU_FORM(同系统实证 missing=[])。",
+                   "pools":  {
+                                 "便宜包邮-长期资源位(前置)":  {
+                                                        "resourceId":  3417,
+                                                        "activityId":  "101682440",
+                                                        "areaId":  357902,
+                                                        "applySkuType":  "3",
+                                                        "ruleId":  "2PthFooBsQoJeOkDu9F9"
+                                                    },
+                                 "便宜包邮-7月补贴场次(后续)":  {
+                                                         "resourceId":  6232,
+                                                         "activityId":  "101806833",
+                                                         "areaId":  43813702,
+                                                         "applySkuType":  "3"
+                                                     },
+                                 "便宜包邮-5.9减5钩子券(微信小程序9.9包邮频道专享)":  {
+                                                                       "resourceId":  7165,
+                                                                       "activityId":  "101855729",
+                                                                       "areaId":  42948202,
+                                                                       "blockId":  42948202,
+                                                                       "applySkuType":  "3",
+                                                                       "ruleId":  "16759520ed58416ec80fe098b6ea57cf",
+                                                                       "_短链":  "http://3.cn/2V-SpdEm（需先有包邮皮肤=便宜包邮前置池已报名）",
+                                                                       "_分摊":  "满5.9减5：频道担51%(2.55)/京喜采销担49%(**我担2.45**)，共补券",
+                                                                       "_领取链路":  "只能微信小程序→9.9包邮频道领，站内默认渠道领不到",
+                                                                       "_batchId":  "按 get_batch_id(areaId,\u0027YYYY-MM-DD 00:00:00\u0027) 取；实证 2026-07-29=6713357 / 2026-08-05=6739617",
+                                                                       "_坑":  "①报名生成便宜包邮促销，多个促销**取最低价**生效；②定额券下压价1:1自伤(见 purchase_coupon_info 文档)；③毛利监控只有 normal 渠道，**包邮频道成交盈亏现有工具看不到**"
+                                                                   },
+                                 "特价-前置":  {
+                                               "resourceId":  5177,
+                                               "activityId":  "101766465",
+                                               "areaId":  38801203,
+                                               "applySkuType":  "3",
+                                               "ruleId":  "49d226df1807254a502944e5b03585ce"
+                                           },
+                                 "特价-后续(补贴券)":  {
+                                                    "resourceId":  7186,
+                                                    "activityId":  "101857088",
+                                                    "areaId":  42839704,
+                                                    "applySkuType":  "3"
+                                                }
+                             },
+                   "seckill":  {
+                                   "areaId":  313601,
+                                   "ruleId":  "87yoF4oB97mt0bp_tXKW",
+                                   "_note":  "秒杀 T+3 起报，8 固定场次(00/08/10/12/16/18/20/22:00:00)。batchId=getBatchId(areaId, \u0027T+3日期 场次:00:00\u0027)。报名用 build_seckill_body。"
+                               }
+               },
+    "subsidy_pools":  {
+                          "142902257":  {
+                                            "desc":  "京喜-政府补贴 / 商品-15%力度",
+                                            "strength":  "15",
+                                            "activityId":  "101854276",
+                                            "resourceList":  [
+                                                                 {
+                                                                     "resourceId":  159022372,
+                                                                     "resourceType":  3,
+                                                                     "nodeResourceId":  8068810511
+                                                                 }
+                                                             ],
+                                            "formItemOrder":  [
+                                                                  1711228304,
+                                                                  1711228108,
+                                                                  1711228818,
+                                                                  1711228305,
+                                                                  1711229154,
+                                                                  1711228109,
+                                                                  1711228819,
+                                                                  1711228306,
+                                                                  1711229155,
+                                                                  1711229156,
+                                                                  1711228821,
+                                                                  1711228111,
+                                                                  1711228822,
+                                                                  1711228308,
+                                                                  1711228112,
+                                                                  1711228113,
+                                                                  1711228309,
+                                                                  1711228824,
+                                                                  1711228825,
+                                                                  1711229162
+                                                              ],
+                                            "roles":  {
+                                                          "sku":  1711228304,
+                                                          "discount":  1711228108,
+                                                          "promoTime":  1711228818,
+                                                          "merchant":  1711228306,
+                                                          "energyLevel":  1711229155,
+                                                          "basePrice":  1711228821
+                                                      }
+                                        },
+                          "142901856":  {
+                                            "desc":  "京喜-政府补贴 / 商品-10%力度",
+                                            "strength":  "10",
+                                            "activityId":  "101854276",
+                                            "resourceList":  [
+                                                                 {
+                                                                     "resourceId":  159022494,
+                                                                     "resourceType":  3,
+                                                                     "nodeResourceId":  8068807684
+                                                                 }
+                                                             ],
+                                            "formItemOrder":  [
+                                                                  1711229145,
+                                                                  1711228807,
+                                                                  1711229146,
+                                                                  1711228292,
+                                                                  1711229147,
+                                                                  1711228098,
+                                                                  1711229148,
+                                                                  1711228293,
+                                                                  1711228808,
+                                                                  1711228809,
+                                                                  1711228100,
+                                                                  1711229150,
+                                                                  1711228810,
+                                                                  1711228811,
+                                                                  1711229151,
+                                                                  1711228295,
+                                                                  1711229152,
+                                                                  1711228812,
+                                                                  1711228298,
+                                                                  1711228303
+                                                              ],
+                                            "roles":  {
+                                                          "sku":  1711229145,
+                                                          "discount":  1711228807,
+                                                          "promoTime":  1711229146,
+                                                          "merchant":  1711228293,
+                                                          "energyLevel":  1711228808,
+                                                          "basePrice":  1711228100
+                                                      }
+                                        },
+                          "142899998":  {
+                                            "desc":  "京喜-政府补贴 / 商品-5%力度",
+                                            "strength":  "5",
+                                            "activityId":  "101854276",
+                                            "resourceList":  [
+                                                                 {
+                                                                     "resourceId":  159016715,
+                                                                     "resourceType":  3,
+                                                                     "nodeResourceId":  8068806859
+                                                                 }
+                                                             ],
+                                            "formItemOrder":  [
+                                                                  1711222841,
+                                                                  1711222842,
+                                                                  1711222843,
+                                                                  1711222279,
+                                                                  1711222631,
+                                                                  1711222844,
+                                                                  1711222280,
+                                                                  1711222281,
+                                                                  1711222282,
+                                                                  1711222632,
+                                                                  1711222633,
+                                                                  1711222285,
+                                                                  1711222286,
+                                                                  1711222845,
+                                                                  1711222287,
+                                                                  1711222846,
+                                                                  1711222288,
+                                                                  1711222636,
+                                                                  1711222637,
+                                                                  1711223370
+                                                              ],
+                                            "roles":  {
+                                                          "sku":  1711222841,
+                                                          "discount":  1711222842,
+                                                          "promoTime":  1711222843,
+                                                          "merchant":  1711222281,
+                                                          "energyLevel":  1711222282,
+                                                          "basePrice":  1711222633
+                                                      }
+                                        }
+                      },
+    "ge":  {
+               "device_info":  "",
+               "_device_info_note":  "b-ext-device-info 头，ge 毛利监控(菜单34047)必需；会过期，失效表现=no auth:专用菜单权限校验，重抓该页任意 lowCodeDataQuery 请求即可"
+           }
+}

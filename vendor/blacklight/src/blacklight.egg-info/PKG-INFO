@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: blacklight
+Version: 2.3
+Summary: 京东京喜采销/营销/广告/数据自动化工具包（osw 采销 + yx 营销 + jzt 广告 + easybi 数据 + pnl/ge 毛利，5 个 MCP server）
+Requires-Python: >=3.9
+Requires-Dist: mcp>=1.0
+Requires-Dist: httpx>=0.24
+Requires-Dist: openpyxl>=3.1
+Requires-Dist: xlrd>=2.0.1
+Provides-Extra: login
+Requires-Dist: DrissionPage>=4.0; extra == "login"
+Provides-Extra: material
+Requires-Dist: Pillow>=10.0; extra == "material"
+Provides-Extra: freshness
+Requires-Dist: psutil>=5.9; extra == "freshness"

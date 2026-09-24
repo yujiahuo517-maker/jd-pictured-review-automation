@@ -1,0 +1,27 @@
+max_same_products_per_sku: 100
+max_reviews_per_product: 50
+min_images_required: 1
+skip_jingxi: false
+enable_image_hash_dedupe: false
+request_delay: 0.8
+headless: true
+fast_interface_mode: false
+comment_workers: 1
+fast_same_product_search: true
+product_page_timeout: 6000
+same_product_response_timeout: 12000
+same_product_fallback_slow: true
+no_login_mode: true
+plugin_image_search_mode: true
+high_sales_mode: false
+max_hot_candidates_to_check: 100
+min_popularity_score: 0
+dom_fallback_on_search_timeout: true
+dom_parse_wait_ms: 2500
+keyword_search_fallback: true
+browser_channel: msedge
+user_data_dir: browser-profile
+template_path:
+jd_image_search_script_dir: vendor
+extension_dir: vendor/jd-extension/1.0.9_1
+load_extension: false

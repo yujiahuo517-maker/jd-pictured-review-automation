@@ -1,0 +1,9 @@
+runtime/state/
+**/__pycache__/
+*.py[cod]
+*.log
+.env
+.env.*
+!.env.example
+vendor/blacklight/vendor/jd_good_reviews/data/
+vendor/blacklight/vendor/jd_good_reviews/logs/
