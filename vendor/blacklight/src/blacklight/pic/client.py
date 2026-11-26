@@ -1,4 +1,4 @@
-"""blacklight.pic.client —— 京喜带图评价平台接口面（`osw.jd.com/picstart`）。
+﻿"""blacklight.pic.client —— 京喜带图评价平台接口面（`osw.jd.com/picstart`）。
 
 **这是什么**：采销工作台「商品 / 带图评价」页。给自己名下**没有带图评价**的 SKU 补一条
 「评价文本 + 实拍图」，走机审/人审后同步到前台评价区。页面顶部原文：该功能属保密项目，
@@ -46,6 +46,7 @@ from blacklight.osw import margin as _osw_margin   # 仅借：签名 + 带 cooki
 # 常量
 # --------------------------------------------------------------------------- #
 FID_SKU_PAGE = "jxzy_aievalandsales_querySkuByPage"
+VENDER_ID = "14691198"          # 京喜自营官方店；querySkuByPage 需显式传店铺ID(2026-10-22 平台要求)
 FID_TASK_LIST = "jxzy_aievalandsales_queryTaskList"
 FID_USER_INFO = "jxzy_aievalandsales_queryUserInfo"
 FID_AI_EVAL = "jxzy_aievalandsales_generateAIEval"
@@ -79,9 +80,14 @@ _SKU_RE = _re.compile(r"^\d{6,20}$")
 # --------------------------------------------------------------------------- #
 def _call(function_id: str, body: dict = None, method: str = "POST"):
     """签名 + 发一次 picstart 请求 → 校验 code==0 → 返回 data。"""
+    payload = dict(body or {})
+    # 2026-10-26 实证：前端每个 body 都带 buid=325/appCode=''（京喜 BU），
+    # 缺了网关直接回「未登录」。这里统一补齐，已有值不覆盖。
+    payload.setdefault("buid", 325)
+    payload.setdefault("appCode", "")
     client = _osw_margin._client()
     with client:
-        raw = _osw_margin._api(client, function_id, body or {}, method)
+        raw = _osw_margin._api(client, function_id, payload, method)
     if not isinstance(raw, dict):
         raise BlacklightError(f"{function_id} 返回异常")
     if raw.get("code") not in (0, "0"):
@@ -133,7 +139,8 @@ def targets_page(page_no: int = 1, page_size: int = 100, sku_ids: list = None,
 
     ⚠️**页内条数可能少于 page_size**（服务端在页内过滤，前端就是靠这个继续翻下一页），
     所以**别拿"这页短了"当作到底了** —— 终止条件只能是累计条数 ≥ totalItem 或翻满页数。"""
-    body = {"pageNo": int(page_no), "pageSize": int(page_size), "imageFilter": int(image_filter)}
+    body = {"pageNo": int(page_no), "pageSize": int(page_size), "imageFilter": int(image_filter),
+            "venderId": str(VENDER_ID)}
     if sku_ids:
         body["skuIds"] = ",".join(_sku(s) for s in sku_ids)
     if spu_ids:
@@ -439,8 +446,8 @@ def _quota_map(sku_ids: list) -> tuple:
     """查这批 SKU 已建了几条 / 上限几条。返回 ({sku: used}, max_per_sku)。"""
     used, max_per = {}, DEFAULT_MAX_TASKS_PER_SKU
     ids = list(dict.fromkeys(sku_ids))
-    for i in range(0, len(ids), 50):
-        chunk = ids[i:i + 50]
+    for i in range(0, len(ids), 20):
+        chunk = ids[i:i + 20]
         d = targets_page(1, max(len(chunk), 10), sku_ids=chunk, image_filter=IMAGE_FILTER_ALL)
         max_per = d["max_per_sku"] or max_per
         for it in d["items"]:

@@ -7,3 +7,7 @@ runtime/state/
 !.env.example
 vendor/blacklight/vendor/jd_good_reviews/data/
 vendor/blacklight/vendor/jd_good_reviews/logs/
+**/*.bak
+**/*.bak-*
+assets-run/
+submission/

@@ -1,0 +1,53 @@
+{
+  "url": "https://designspark.jd.com/generate",
+  "selectors": {
+    "new_chat": [
+      "button:has-text('新建对话')",
+      "text='新建对话'"
+    ],
+    "file_input": [
+      "input[type='file']"
+    ],
+    "upload_control": [
+      "button:has-text('上传')",
+      "[title*='上传']",
+      "[aria-label*='上传']",
+      "text='上传文件'"
+    ],
+    "uploaded_reference": [
+      "img[alt='reference']",
+      "img[alt*='reference']",
+      "[class*='reference'] img[src]",
+      "img[src^='blob:']"
+    ],
+    "prompt_input": [
+      "textarea.ant-input",
+      "textarea[placeholder*='提示词']",
+      "textarea",
+      "[contenteditable='true']"
+    ],
+    "generated_ready": [
+      "text='复制提示词'",
+      "text='重新生成'",
+      "text='重新编辑'"
+    ],
+    "generated_images": "img",
+    "regenerate_control": [
+      "button:has-text('重新生成')",
+      "text='重新生成'"
+    ],
+    "download_control": [
+      "button:has(svg[data-icon='download'])",
+      "button:has([aria-label='download'])",
+      "[aria-label='download']",
+      ".anticon-download",
+      "svg[data-icon='download']",
+      "[title*='下载图片']",
+      "[aria-label*='下载图片']",
+      "button:has-text('下载图片')",
+      "text='下载图片'",
+      "[title='下载']",
+      "[aria-label='下载']"
+    ]
+  }
+}

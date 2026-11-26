@@ -15,7 +15,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, quote, unquote, urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPError, Request, urlopen
 
 from openpyxl import Workbook, load_workbook
 from playwright.sync_api import sync_playwright
